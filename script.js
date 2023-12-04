@@ -33,8 +33,6 @@ musicaFocoInput.addEventListener('change', () => {
   };
 });
 
-console.log(musicaFoco)
-
 focoBt.addEventListener('click', ()=>{
   tempoDecorridoEmSegundos = 1500;
   alterarContexto('foco');
