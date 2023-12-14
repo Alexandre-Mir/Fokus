@@ -5,7 +5,11 @@ const textArea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
 
 // Recuperação de tarefas salvas no localStorage
-const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+const listaTarefas = JSON.parse(localStorage.getItem('listaTarefas')) || [];
+
+function salvarTarefas() {
+  localStorage.setItem('listaTarefas', JSON.stringify(listaTarefas));
+}
 
 // Função para criar elemento de tarefa
 function criarElementoTarefa(tarefa) {
@@ -39,8 +43,13 @@ function criarElementoTarefa(tarefa) {
 
   // Clicar no botão para editar o nome da tarefa
   botao.onclick = ()=> {
+    // pergunta e armazena novo nome da tarefa
     const novaDescricao = prompt("Reescreva o nome da tarefa.");
+    // altera visualmente o nome
     paragrafo.textContent = novaDescricao;
+    // altera o nome na localStorage
+    tarefa.descricao = novaDescricao;
+    salvarTarefas();
   }
 
   // Adição dos elementos criados ao elemento li
@@ -66,14 +75,14 @@ formAdicionarTarefa.addEventListener('submit', (evento) => {
     descricao: textArea.value
   }
   // Adição da tarefa ao array de tarefas
-  tarefas.push(tarefa);
+  listaTarefas.push(tarefa);
 
-  // Criação do elemento visual da tarefa e adição à lista de tarefas
+  // Criação do elemento visual da tarefa e adição à ul de tarefas
   const elementoTarefa = criarElementoTarefa(tarefa);
   ulTarefas.append(elementoTarefa);
   
   // Salvamento das tarefas no localStorage
-  localStorage.setItem('tarefas', JSON.stringify(tarefas));
+  salvarTarefas();
 
   // Limpeza da área de texto e ocultação do formulário
   textArea.value = '';
@@ -81,7 +90,7 @@ formAdicionarTarefa.addEventListener('submit', (evento) => {
 })
 
 // Criação de elementos de tarefa para tarefas existentes
-tarefas.forEach(tarefa => {
+listaTarefas.forEach(tarefa => {
   const elementoTarefa = criarElementoTarefa(tarefa);
   ulTarefas.append(elementoTarefa);
 });
