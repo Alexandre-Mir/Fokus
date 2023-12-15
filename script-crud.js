@@ -45,11 +45,14 @@ function criarElementoTarefa(tarefa) {
   botao.onclick = ()=> {
     // pergunta e armazena novo nome da tarefa
     const novaDescricao = prompt("Reescreva o nome da tarefa.");
-    // altera visualmente o nome
-    paragrafo.textContent = novaDescricao;
-    // altera o nome na localStorage
-    tarefa.descricao = novaDescricao;
-    salvarTarefas();
+    // Não permite alteração que não contenha nada
+    if (novaDescricao) {
+      // altera visualmente o nome
+      paragrafo.textContent = novaDescricao;
+      // altera o nome na localStorage
+      tarefa.descricao = novaDescricao;
+      salvarTarefas();
+    }
   }
 
   // Adição dos elementos criados ao elemento li
