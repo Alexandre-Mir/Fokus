@@ -16,7 +16,7 @@ const somPlay = new Audio('sons/play.wav');
 const somPause = new Audio('sons/pause.mp3');
 const somAlerta = new Audio('sons/beep.mp3')
 
-let tempoDecorridoEmSegundos = 1500;
+let tempoDecorridoEmSegundos = 10; //1500
 let intervaloId = null;
 
 musicaFoco.loop = true;
@@ -86,8 +86,13 @@ function alterarContexto(contexto){
 
 const contagemRegressiva = () =>{
   if(tempoDecorridoEmSegundos <= 0){
-    // somAlerta.play();
+    somAlerta.play();
     alert('Tempo finalizado');
+    const focoAtivo = html.getAttribute('data-contexto') == 'foco';
+    if (focoAtivo) {
+      const evento = new CustomEvent('FocoFinalizado')
+      document.dispatchEvent(evento);
+    }
     zerar()
     return
   }
@@ -115,6 +120,21 @@ function zerar (){
   iniciarOuPausarBt.textContent = 'Começar'
   iniciarOuPausarIcon.setAttribute('src', `imagens/play_arrow.png`)
   intervaloId = null;
+
+  // Reinicie o tempo para o valor inicial com base no contexto
+  switch (html.getAttribute('data-contexto')) {
+    case 'foco':
+      tempoDecorridoEmSegundos = 1500;
+      break;
+    case 'descanso-curto':
+      tempoDecorridoEmSegundos = 300;
+      break;
+    case 'descanso-longo':
+      tempoDecorridoEmSegundos = 900;
+      break;
+    default:
+      break;
+  }
 }
 
 function mostrarTempo(){

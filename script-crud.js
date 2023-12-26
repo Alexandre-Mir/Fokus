@@ -3,12 +3,23 @@ const btnAdicionarTarefa = document.querySelector('.app__button--add-task');
 const formAdicionarTarefa = document.querySelector('.app__form-add-task');
 const textArea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
+const btnCancelar = document.querySelector('.app__form-footer__button--cancel');
+const paragrafoDescricaoTarefa = document.querySelector('.app__section-active-task-description');
 
 // Recuperação de tarefas salvas no localStorage
 const listaTarefas = JSON.parse(localStorage.getItem('listaTarefas')) || [];
+let tarefaSelecionada = null;
+let liTarefaSelecionada = null;
 
+// Salvamento das tarefas no localStorage
 function salvarTarefas() {
   localStorage.setItem('listaTarefas', JSON.stringify(listaTarefas));
+}
+
+// Limpeza da área de texto e ocultação do formulário
+function limparTexto() {
+  textArea.value = '';
+  formAdicionarTarefa.classList.add('hidden');
 }
 
 // Função para criar elemento de tarefa
@@ -60,6 +71,23 @@ function criarElementoTarefa(tarefa) {
   li.append(svg);
   li.append(botao);
 
+
+  li.onclick = () => {
+    document.querySelectorAll('.app__section-task-list-item-active').forEach(elemento => {
+      elemento.classList.remove('app__section-task-list-item-active');
+    })
+    if (tarefaSelecionada == tarefa) {
+      paragrafoDescricaoTarefa.textContent = '';
+      tarefaSelecionada = null;
+      liTarefaSelecionada = null;
+      return
+    }
+    tarefaSelecionada = tarefa;
+    liTarefaSelecionada = li;
+    paragrafoDescricaoTarefa.textContent = tarefa.descricao;
+    li.classList.add('app__section-task-list-item-active');
+  }
+
   return li;
 
 }
@@ -88,8 +116,7 @@ formAdicionarTarefa.addEventListener('submit', (evento) => {
   salvarTarefas();
 
   // Limpeza da área de texto e ocultação do formulário
-  textArea.value = '';
-  formAdicionarTarefa.classList.add('hidden');
+  limparTexto();
 })
 
 // Criação de elementos de tarefa para tarefas existentes
@@ -97,3 +124,13 @@ listaTarefas.forEach(tarefa => {
   const elementoTarefa = criarElementoTarefa(tarefa);
   ulTarefas.append(elementoTarefa);
 });
+
+btnCancelar.addEventListener('click', limparTexto);
+
+document.addEventListener('FocoFinalizado', () => {
+  if (tarefaSelecionada && liTarefaSelecionada) {
+    liTarefaSelecionada.classList.remove('app__section-task-list-item-active');
+    liTarefaSelecionada.classList.add('app__section-task-list-item-complete');
+    liTarefaSelecionada.querySelector('button').setAttribute('disabled', 'disabled');
+  }
+})
