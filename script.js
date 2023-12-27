@@ -16,7 +16,7 @@ const somPlay = new Audio('sons/play.wav');
 const somPause = new Audio('sons/pause.mp3');
 const somAlerta = new Audio('sons/beep.mp3')
 
-let tempoDecorridoEmSegundos = 10; //1500
+let tempoDecorridoEmSegundos = 1500; //1500
 let intervaloId = null;
 
 musicaFoco.loop = true;
